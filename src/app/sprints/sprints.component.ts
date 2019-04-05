@@ -22,6 +22,7 @@ iterations:Iteration[];
 getSprints(){
   this.rest.GetSprints().subscribe((iterations: {}) => {
     console.log(iterations);
+    //@ts-ignore 
     this.iterations=iterations;
   });
 }
@@ -32,6 +33,7 @@ onSaveId(id,name,d1,d2){
   var datefin=new Date(d1);
   console.log(datestart);
   console.log(datefin);
+  //@ts-ignore 
   var moment = require('moment-business-days');
   var diff=moment(datefin).businessDiff(moment(datestart));
   console.log(diff);

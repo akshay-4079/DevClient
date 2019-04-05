@@ -21,6 +21,7 @@ export class ProjectsComponent implements OnInit {
 getProjects(){
   this.rest.GetProjects().subscribe((projects: {}) => {
     console.log(projects);
+    //@ts-ignore; 
     this.projects=projects;
   });
 }

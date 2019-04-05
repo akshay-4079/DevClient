@@ -79,6 +79,7 @@ getWorkItems(){
 
         
     }
+    //@ts-ignore 
     this.outputs=model;
     console.log(model);
   });

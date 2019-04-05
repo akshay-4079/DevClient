@@ -21,6 +21,7 @@ export class TeamsComponent implements OnInit {
 getTeams(){
   this.rest.GetTeams().subscribe((teams: {}) => {
     console.log(teams);
+    //@ts-ignore 
     this.teams=teams;
   });
 }

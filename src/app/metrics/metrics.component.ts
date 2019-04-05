@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import  {ApiService} from '../api.service';
 import {ActivatedRoute,Router} from '@angular/router';
-import { currentId } from 'async_hooks';
+
 import * as CanvasJS from '../../assets/Graph/CanvasJS.min';
 
 import { stringify } from 'querystring';
