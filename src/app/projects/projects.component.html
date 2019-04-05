@@ -1,0 +1,10 @@
+<div *ngFor="let project of projects">
+  <div class="card" style="width: 18rem;height:12rem;float: left;margin-left: 5%;margin-top: 5%;">
+    <div class="card-body" >
+      <h5 class="card-title">{{project.name}}</h5>
+      <p class="card-text">{{project.description}}</p>
+    
+      <button class="btn btn-primary" (click)="onSaveId(project.id,project.name)">See More</button>
+    </div>
+  </div>
+</div>
