@@ -52,5 +52,10 @@ RetrieveDates():Observable<any>{
 }
 RetrieveData():Observable<any>{
   return this.http.get(endpoint+'Retrieval/'+sprintmetricurl).pipe(map(this.extractData));
+
+}
+SprintOverviewData():Observable<any>{
+  return this.http.get(endpoint+'SprintOverview/'+sprinturl).pipe(map(this.extractData));
+
 }
 } 

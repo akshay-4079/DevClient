@@ -17,10 +17,11 @@ export class TeamsComponent implements OnInit {
 
   ngOnInit() {
     this.getTeams();
+    
   }
 getTeams(){
   this.rest.GetTeams().subscribe((teams: {}) => {
-    console.log(teams);
+    
     //@ts-ignore 
     this.teams=teams;
   });
@@ -28,7 +29,7 @@ getTeams(){
 onSaveId(name1,name2){
   localStorage.setItem("CurrentTeam",name1);
   localStorage.setItem("CurrTeamName",name2);
-  console.log(name1,"Saved");
+  
   location.replace('/Sprints');
 }
 }

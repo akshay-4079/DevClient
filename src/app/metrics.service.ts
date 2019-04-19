@@ -1,17 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import  {ApiService} from '../api.service';
-import {ActivatedRoute,Router} from '@angular/router';
+import { Injectable } from '@angular/core';
+import  {ApiService} from './api.service';
+import * as CanvasJS from './../assets/Graph/CanvasJS.min';
 
-import * as CanvasJS from '../../assets/Graph/CanvasJS.min';
-
-import { stringify } from 'querystring';
-@Component({
-  selector: 'app-metrics',
-  templateUrl: './metrics.component.html',
-  styleUrls: ['./metrics.component.css']
+@Injectable({
+  providedIn: 'root'
 })
-export class MetricsComponent implements OnInit {
-dates:any;
+export class MetricsService {
+inc:any
+  dates:any;
 avgEV:any;
 data:any;
 array:[];
@@ -20,15 +16,17 @@ EV=[];
 ET=[];
 AT=[];
 RT=[];
-  constructor(public rest:ApiService, private route: ActivatedRoute, private router: Router) { }
+ev=[];
+et=[];
+at=[];
+rt=[];
+  constructor(public rest:ApiService) { }
 
   ngOnInit() {
-    this.getDates();
-    this.getData();
-    
+ 
   }
  drawChart(){
-  var name=this.data1[0].fields["System.Title"];
+  
   class datapoint{
     label:string;
     y:number;
@@ -159,32 +157,59 @@ RT=[];
 
 
  }
-getDates(){
+
+public  getData(id1)
+{
+
   this.rest.RetrieveDates().subscribe((dates: {}) => {
-
-    this.dates=dates;
+  
+      this.dates= dates;
+  });
+    this.rest.RetrieveData().subscribe((data: {}) => {
+  
+ this.inc=data;
 });
-}
-getData(){
-  this.rest.RetrieveData().subscribe((data: {}) => {
+    var model=JSON.parse(localStorage.getItem("model"));
 
-    var task=localStorage.getItem("currentTask");
-    var id=parseInt(task);
-    this.data=data;
+  
+
+    var id=id1;
+    this.data=model;
     var g=new Array;
     var d=[];
-    for(var i=0;i<this.data.length;i++)
+    
+    for(var i=0;i<model.length;i++)
     {
-      for(var j=0;j<this.data[i].value.length;j++){
-        if(this.data[i].value[j].id==id){
-          g.push(this.data[i].value[j]);
-
+      
+      if(model[i][0].id==id1)
+      {
+      d=model[i][1];
+      
+    }
+    else{
+      continue;
+    }
+    }
+    class filter{
+    value=new Array;
+    }
+   var  ans=new Array
+    for(var i=0;i<this.inc.length;i++)
+    {
+      var f1=new filter;
+      for(var j=0;j<this.inc[i].value.length;j++){
+        for(var k=0;k<d.length;k++){
+        if(d[k].id==this.inc[i].value[j].id){
+          f1.value.push(this.inc[i].value[j]);
         }
       }
     }
-    this.data1=g;
-    
-   var EffVar=0;
+    ans.push(f1);
+    }
+ g=this.dates;
+ 
+ 
+  var EffVar=0;
    var EV=[];
    var ET=[];
    var AT=[];
@@ -193,46 +218,74 @@ getData(){
    var totaldays=JSON.parse(localStorage.getItem("duration"))+1;
    var totalEV=0;
    
-   
-   for(var i=0;i<g.length;i++){
-    if(i<=totaldays){
-    var EstimatedTime=  g[i].fields["Microsoft.VSTS.Scheduling.OriginalEstimate"];
-    var ActualTime= g[i].fields["Microsoft.VSTS.Scheduling.CompletedWork"];
-    var RemainingWork=g[i].fields["Microsoft.VSTS.Scheduling.RemainingWork"]; 
-    var mult=currentdate/totaldays;
+
+
+   for(var i=0;i<ans.length;i++){
+      if(i<=totaldays){
+        var EstimatedTime=0;
+        var ActualTime=0;
+        var RemainingWork=0;
+   for(var j=0;j<ans[i].value.length;j++){
+    EstimatedTime =EstimatedTime+ ans[i].value[j].fields["Microsoft.VSTS.Scheduling.OriginalEstimate"];
+   ActualTime=ActualTime +ans[i].value[j].fields["Microsoft.VSTS.Scheduling.CompletedWork"];
+   RemainingWork=RemainingWork+ans[i].value[j].fields["Microsoft.VSTS.Scheduling.RemainingWork"]; 
+   var mult=currentdate/totaldays;
     if(mult>1){
-      mult=1;
-    }
+     mult=1;
+   }
+   }
     
     
-    var mod=mult*EstimatedTime
-    
-    EffVar=(ActualTime-mod)/mod;
+     var mod=mult*EstimatedTime
+     
+     EffVar=(ActualTime-mod)/mod;
     
     if(EffVar&&EffVar!=Infinity){
     totalEV=totalEV+EffVar;
-    }
+     }
     
     ET.push(EstimatedTime*mult);
-    AT.push(ActualTime);
-    RT.push(RemainingWork);
-    EV.push(EffVar*100);
+     AT.push(ActualTime);
+   RT.push(RemainingWork);
+     EV.push(EffVar*100);
     currentdate++;
     
    }
-  }
-    this.EV=EV;
-    this.ET=ET;
-    this.AT=AT;
-    this.RT=RT;
-    if(g.length<=totaldays){
-      this.avgEV=totalEV/(g.length-1);
-      
     }
-    this.avgEV=(totalEV/(totaldays));
-    
-    
-    this.drawChart();
-});
+     this.EV=EV;
+     this.ET=ET;
+    this.AT=AT;
+     this.RT=RT;
+    if(g.length<=totaldays){
+       this.avgEV=totalEV/(g.length-1);
+       
+    }
+   this.avgEV=(totalEV/(totaldays));
+  
+  try{
+ this.drawChart();
+  }
+  catch
+  {
+
+  }
+
+
+
+
+
+  }
+  getData2(id1){
+    console.log(id1);
+    this.getData(id1);
+    var data=[];
+    data.push(this.ET[this.ET.length-1])
+    data.push(this.AT[this.AT.length-1])
+    data.push(this.RT[this.RT.length-1])
+    console.log(data);
+    return data;
+  }
 }
-}
+
+
+

@@ -1,4 +1,22 @@
-<h1>Sprint List</h1>
+
+
+<div class="dropdown" >
+  <h3 style="color:white;display: inline-block">{{ProjName}}</h3> 
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-left:100px">
+       {{TeamName}}
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a *ngFor="let iteration of projects" class="dropdown-item" (click)="onDropId(iteration.id,iteration.name)">{{iteration.name}}</a>
+      </div>
+    </div>
+
+
+
+
+
+
+<div *ngIf="ProjName" >
+    
 <table class="table table-dark table-bordered">
   <thead>
     <tr>
@@ -13,9 +31,19 @@
     <tr *ngFor="let iteration of iterations">
     <td>{{iteration.name}}</td>
  
-     <td>{{iteration.attributes.startDate}}</td>
-     <td>{{iteration.attributes.finishDate}}</td>
+     <td *ngIf="iteration.attributes.finishDate!=null">{{iteration.attributes.startDate.split('T')[0]}}</td>
+     <td *ngIf="iteration.attributes.finishDate!=null">{{iteration.attributes.finishDate.split('T')[0]}}</td>
      <td> <button class="btn btn-primary" (click)="onSaveId(iteration.id,iteration.name,iteration.attributes.finishDate,iteration.attributes.startDate)">See WorkItems</button></td>
     </tr>
   </tbody>
   </table>
+ 
+  </div>
+  <div class="jumbotron" *ngIf="!ProjName">
+    <h1 class="display-4">Oops</h1>
+    <p class="lead">Looks like you havent selected a project.</p>
+    <hr class="my-4">
+    <p>Please click here to select your project</p>
+    <a class="btn btn-primary btn-lg" href="/Projects" role="button">Click here</a>
+  </div>
+  <div id="chartContainer" style="height: 300px; width: 100%;"></div>

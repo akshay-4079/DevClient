@@ -12,13 +12,19 @@ import { TeamsComponent } from './teams/teams.component';
 import { SprintsComponent } from './sprints/sprints.component';
 import { WorkitemComponent } from './workitem/workitem.component';
 import { MetricsComponent } from './metrics/metrics.component';
+import { NgxPopper } from 'angular-popper';
 
 
 const Approutes: Routes = [
+  {
+    path: '', redirectTo: '/Projects', pathMatch: 'full'
+  },
+  
   {path:'Projects',
   component:ProjectsComponent,
   data:{title: 'Projects List'}
-  },
+},
+  
   {path:'Teams',
   component:TeamsComponent,
   data:{title: 'Teams List'}
@@ -38,6 +44,7 @@ const Approutes: Routes = [
     data:{title:"Metrics"}
   }
   
+
   
   ];
 @NgModule({
@@ -55,7 +62,8 @@ const Approutes: Routes = [
     RouterModule.forRoot(Approutes),
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxPopper
   ],
   providers: [],
   bootstrap: [AppComponent]

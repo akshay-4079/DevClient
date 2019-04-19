@@ -20,7 +20,7 @@ export class ProjectsComponent implements OnInit {
   }
 getProjects(){
   this.rest.GetProjects().subscribe((projects: {}) => {
-    console.log(projects);
+    
     //@ts-ignore; 
     this.projects=projects;
   });
@@ -28,7 +28,7 @@ getProjects(){
 onSaveId(id,id2){
  localStorage.setItem("CurrentId",id);
  localStorage.setItem("CurrProName",id2);
- console.log(id,"Saved");
- location.replace('/Teams');
+ 
+ location.replace('/Sprints');
 }
 }
